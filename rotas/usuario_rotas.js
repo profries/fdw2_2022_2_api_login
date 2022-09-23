@@ -7,6 +7,7 @@ const router = express.Router();
 
 router.get('/', usuarioController.listar)
 router.post('/', usuarioController.inserir)
+router.get('/busca', usuarioController.buscarUsuario)
 router.get('/:id', usuarioController.buscarPorId)
 router.put('/:id', usuarioController.atualizar)
 router.delete('/:id', usuarioController.deletar)

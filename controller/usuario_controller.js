@@ -97,3 +97,25 @@ exports.deletar = (req, res) => {
         }
     })    
 }
+
+exports.buscarUsuario = (req, res) => {
+    if(req.query && req.query.email) {
+        const paramEmail = req.query.email;
+        Usuario.findOne({email: paramEmail}, (err, usuarioEncontrado) => {
+            if(err) {
+                return res.status(500).json({Erro: err}); 
+            }
+            else if(usuarioEncontrado) {
+                return res.json(usuarioEncontrado);
+            }
+            else {
+                return res.status(404).json(
+                    { Erro: "Usuario nao encontrado" }
+                )    
+            }    
+        })
+    }
+    else {
+        res.status(400).json({Erro: "Faltou o parametro email"});
+    }
+}
