@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const rotaLogin = require('./rotas/login_rotas')
 const rotaProduto = require('./rotas/produto_rotas')
 const rotaUsuario = require('./rotas/usuario_rotas')
+const loginMiddleware = require('./middleware/login_middleware')
 const app = express()
 const port = 3000
 
@@ -27,6 +28,8 @@ mongoose.connect('mongodb://127.0.0.1:27017/app_produtos')
 app.use(trataLog);
 
 app.use('/api/login', rotaLogin);
+
+app.use(loginMiddleware.validaToken)
 
 app.use('/api/produtos', rotaProduto);
 

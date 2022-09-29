@@ -1,5 +1,5 @@
 {
-  "name": "api_crud_produtos_mem",
+  "name": "api_crud_produtos_mongo",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
