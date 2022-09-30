@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt')
 const Usuario = require('../model/usuario');
 
 exports.listar = (req, res) => {
@@ -18,6 +19,10 @@ exports.inserir = (req, res) => {
         && usuarioRequest.email && usuarioRequest.senha) {
 
         const usuarioNovo = new Usuario(usuarioRequest);
+        console.log("Senha 1", usuarioNovo.senha);
+        usuarioNovo.senha = bcrypt.hashSync(usuarioRequest.senha, 10);
+        console.log("Senha 2", usuarioNovo.senha);
+
         usuarioNovo.save((err, usuarioSalvo) => {
             if(err) {
                 res.status(500).json({Erro: err})
@@ -63,6 +68,9 @@ exports.atualizar = (req, res) => {
         return res.status(400).json({
             Erro:"Nome e/ou email sao obrigatorios"
         });    
+    }
+    if(usuarioRequest.senha) {
+        usuarioRequest.senha = bcrypt.hashSync(usuarioRequest.senha, 10);
     }
 
     Usuario.findByIdAndUpdate(id, usuarioRequest, {new: true}, 
@@ -130,7 +138,7 @@ exports.validarUsuario = (req, res) => {
             if(err) {
                 return res.status(500).json({Erro: err}); 
             }
-            else if(usuarioEncontrado && usuarioEncontrado.senha == senhaUsuario) {
+            else if(usuarioEncontrado && bcrypt.compareSync(senhaUsuario, usuarioEncontrado.senha)) {
                 const token = jwt.sign( {
                     id: usuarioEncontrado.id                    
                 }, 'Sen@crs', { expiresIn: "1h"});
